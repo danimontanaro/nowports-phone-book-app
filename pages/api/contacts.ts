@@ -4,8 +4,6 @@ import { getSession } from "next-auth/react";
 
 const prisma = new PrismaClient();
 
-type NewContact = Partial<Contact>;
-
 export interface ContactsResponse {
   data?: Omit<Contact, "user" | "userId">[] | Contact;
 }
@@ -23,7 +21,7 @@ export default async (
     const { firstName, lastName, phone, userId, id } = newContact;
     const saveContact = await prisma.contact.upsert({
       where: {
-        id: id || -1,
+        id: parseInt(id) || -1,
       },
       update: {
         firstName: !!firstName ? firstName : undefined,

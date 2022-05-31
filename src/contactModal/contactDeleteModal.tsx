@@ -7,7 +7,15 @@ import { CONTACTS_QUERY } from "../../src/constants";
 import { deleteContact } from "../../src/api/contact";
 import { Contact } from "@prisma/client";
 
-const DeleteContactModal = ({ selectedContact, setListContactAfterDelete }) => {
+interface DeleteContactModalArgs {
+  contacts: Omit<Contact, "userId" | "user">[];
+  contactSelected?: Omit<Contact, "userId" | "user">;
+}
+
+const DeleteContactModal = ({
+  contactSelected,
+  contacts,
+}: DeleteContactModalArgs) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const queryClient = useQueryClient();
   const {
@@ -15,7 +23,7 @@ const DeleteContactModal = ({ selectedContact, setListContactAfterDelete }) => {
     error,
     mutate: handleDeleteContact,
   } = useMutation(
-    async (contact: Contact) => {
+    async (contact: Omit<Contact, "userId" | "user">) => {
       const response = await deleteContact(contact.id);
       const data = await response.json();
       return data;
@@ -30,7 +38,9 @@ const DeleteContactModal = ({ selectedContact, setListContactAfterDelete }) => {
       },
 
       onSuccess: () => {
-        const newListContacts = setListContactAfterDelete(selectedContact.id);
+        const newListContacts = contacts.filter(
+          (contact) => contact.id !== contactSelected.id
+        );
         queryClient.setQueryData([CONTACTS_QUERY], [...newListContacts]);
       },
     }
@@ -42,11 +52,16 @@ const DeleteContactModal = ({ selectedContact, setListContactAfterDelete }) => {
 
   const handleDeleteContactSelected = () => {
     setIsModalVisible(false);
-    handleDeleteContact(selectedContact);
+    handleDeleteContact(contactSelected);
   };
   return (
     <>
-      <Button danger icon={<DeleteOutlined />} onClick={showModal} />
+      <Button
+        loading={isLoading}
+        danger
+        icon={<DeleteOutlined />}
+        onClick={showModal}
+      />
       <Modal
         title="Delete Contact"
         visible={isModalVisible}

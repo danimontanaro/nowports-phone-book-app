@@ -2,12 +2,7 @@ import { useState } from "react";
 import type { NextPage } from "next";
 
 import { Layout, Button, Row, List, Divider, Space } from "antd";
-import {
-  EditOutlined,
-  PlayCircleOutlined,
-  PlusOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
 import { PrismaClient, Contact } from "@prisma/client";
 import { dehydrate, QueryClient, useQuery, useQueryClient } from "react-query";
@@ -99,11 +94,6 @@ const Home: NextPage<HomeArgs> = ({ userId }) => {
 
   const [showContactModal, setShowContactModal] = useState(false);
 
-  const setListContactAfterDelete = (contactDeleted) => {
-    console.log({ contactDeleted });
-    return contacts.filter((contact) => contact.id !== contactDeleted);
-  };
-
   const onCloseContactModal = () => {
     setShowContactModal(false);
     setContactSelected(null);
@@ -147,8 +137,8 @@ const Home: NextPage<HomeArgs> = ({ userId }) => {
                           onClick={() => onOpenContactModalEdit(contact)}
                         />
                         <DeleteContactModal
-                          selectedContact={contact}
-                          setListContactAfterDelete={setListContactAfterDelete}
+                          contactSelected={contact}
+                          contacts={contacts}
                         />
                       </Space>
                     }
@@ -200,17 +190,6 @@ const Home: NextPage<HomeArgs> = ({ userId }) => {
         </Content>
       </Layout>
       <Footer style={{ textAlign: "center" }}>{FOOTER_DESCRIPTION}</Footer>
-      {/* 
-      <FormContact
-        handleFormSubmit={handleFormSubmit}
-        contactSelected={contactSelected}
-        form={form}
-      /> */}
-      {/* <CreateClassModal
-        onSuccess={changeSelectedClass}
-        close={() => setShowContactModal(false)}
-        visible={isCreateClassModalVisible}
-      /> */}
     </Layout>
   );
 };

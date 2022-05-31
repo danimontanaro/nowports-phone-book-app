@@ -1,11 +1,5 @@
 import { Contact } from "@prisma/client";
 
-/* export type DeleteContact = {
-  id?: number;
-  lastName?: string;
-  firstName?: string;
-  phone?: number;
-}; */
 const URL = "/api/contacts";
 
 export const createOrUpdateContact = (

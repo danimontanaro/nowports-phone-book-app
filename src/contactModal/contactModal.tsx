@@ -1,9 +1,8 @@
-import FC, { useEffect } from "react";
+import { useEffect } from "react";
 import { Button, Form, Input, Modal, ModalProps, Space } from "antd";
 import { useMutation, useQueryClient } from "react-query";
-import { useSession } from "next-auth/react";
 import { Contact } from "@prisma/client";
-import { SaveOutlined } from "@ant-design/icons";
+
 import { CONTACTS_QUERY } from "../constants";
 import { createOrUpdateContact } from "../api/contact";
 
@@ -15,19 +14,14 @@ interface ContactModalProps extends ModalProps {
   userId: string;
 }
 
-interface CreateClassData {
-  name: string;
-  userEmail: string;
-}
-
 const REQUIRED_FIELD_ERROR = "This field is required";
 
-const ContactModal: FC<ContactModalProps> = ({
+const ContactModal = ({
   contactSelected,
   contacts,
   userId,
   ...modalProps
-}) => {
+}: ContactModalProps) => {
   const [form] = Form.useForm();
 
   const queryClient = useQueryClient();
@@ -45,7 +39,10 @@ const ContactModal: FC<ContactModalProps> = ({
 
   const { mutate: handleCreateOrUpdateContacts, isLoading } = useMutation(
     async (contactObject: Omit<Contact, "user">) => {
-      const response = await createOrUpdateContact(contactObject, userId);
+      const response = await createOrUpdateContact(
+        { ...contactSelected, ...contactObject },
+        userId
+      );
       const data = await response.json();
       return data;
     },
@@ -80,7 +77,7 @@ const ContactModal: FC<ContactModalProps> = ({
   const onClose = () => {
     modalProps.close();
   };
-  console.log({ contactSelected });
+
   return (
     <Modal
       destroyOnClose
