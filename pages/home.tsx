@@ -23,6 +23,7 @@ import ContactModal from "../src/contactModal/contactModal";
 import DeleteContactModal from "../src/contactModal/contactDeleteModal";
 
 import { getCache, saveCache } from "../src/utils/cache";
+import FetchFailure from "../src/fetchFailure";
 
 const { Content, Footer } = Layout;
 
@@ -95,7 +96,11 @@ interface HomeArgs {
 }
 
 const Home: NextPage<HomeArgs> = ({ userId }) => {
-  const { data: contacts, isLoading } = useQuery([CONTACTS_QUERY], async () => {
+  const {
+    data: contacts,
+    isLoading,
+    error,
+  } = useQuery([CONTACTS_QUERY], async () => {
     // TODO make getContacts
     const dataInCache: Omit<Contact, "userId" | "user">[] =
       getCache(CONTACTS_QUERY);
@@ -123,7 +128,6 @@ const Home: NextPage<HomeArgs> = ({ userId }) => {
     setShowContactModal(true);
     setContactSelected(contact);
   };
-
   return (
     <Layout>
       <Header />
@@ -132,69 +136,71 @@ const Home: NextPage<HomeArgs> = ({ userId }) => {
           <Row align="middle" justify="space-between"></Row>
           <div className={styles.classList}>
             <Divider />
-            {isLoading ? (
-              <Spin size="large" />
-            ) : (
-              <List
-                itemLayout="vertical"
-                size="large"
-                dataSource={contacts}
-                renderItem={(contact) => (
-                  <>
-                    <List.Item
-                      className={styles.classListItem}
-                      key={contact.id}
-                      extra={
-                        <Space
-                          direction="horizontal"
-                          size="large"
-                          align="center"
-                        >
-                          <Button
-                            type="text"
-                            icon={
-                              <EditOutlined
+            {error && <FetchFailure />}
+            {!error &&
+              (isLoading ? (
+                <Spin size="large" />
+              ) : (
+                <List
+                  itemLayout="vertical"
+                  size="large"
+                  dataSource={contacts}
+                  renderItem={(contact) => (
+                    <>
+                      <List.Item
+                        className={styles.classListItem}
+                        key={contact.id}
+                        extra={
+                          <Space
+                            direction="horizontal"
+                            size="large"
+                            align="center"
+                          >
+                            <Button
+                              type="text"
+                              icon={
+                                <EditOutlined
+                                  style={{
+                                    fontSize: "30px",
+                                    color: "rgba(124, 130, 142, 0.6)",
+                                    cursor: "pointer",
+                                  }}
+                                />
+                              }
+                              onClick={() => onOpenContactModalEdit(contact)}
+                            />
+                            <DeleteContactModal
+                              contactSelected={contact}
+                              contacts={contacts}
+                            />
+                          </Space>
+                        }
+                      >
+                        <List.Item.Meta
+                          title={
+                            <Typography.Link
+                              //href={`/play/${contact.id}`}
+                              style={{
+                                fontSize: "1.5rem",
+                              }}
+                            >
+                              <UserOutlined
                                 style={{
                                   fontSize: "30px",
-                                  color: "rgba(124, 130, 142, 0.6)",
-                                  cursor: "pointer",
+                                  color: "#08c",
+                                  paddingRight: "30px",
                                 }}
                               />
-                            }
-                            onClick={() => onOpenContactModalEdit(contact)}
-                          />
-                          <DeleteContactModal
-                            contactSelected={contact}
-                            contacts={contacts}
-                          />
-                        </Space>
-                      }
-                    >
-                      <List.Item.Meta
-                        title={
-                          <Typography.Link
-                            //href={`/play/${contact.id}`}
-                            style={{
-                              fontSize: "1.5rem",
-                            }}
-                          >
-                            <UserOutlined
-                              style={{
-                                fontSize: "30px",
-                                color: "#08c",
-                                paddingRight: "30px",
-                              }}
-                            />
-                            {contact.firstName} {contact.lastName}
-                          </Typography.Link>
-                        }
-                      />
-                    </List.Item>
-                    <Divider />
-                  </>
-                )}
-              />
-            )}
+                              {contact.firstName} {contact.lastName}
+                            </Typography.Link>
+                          }
+                        />
+                      </List.Item>
+                      <Divider />
+                    </>
+                  )}
+                />
+              ))}
 
             <ContactModal
               visible={showContactModal}

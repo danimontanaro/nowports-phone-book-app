@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import type { NextPage } from "next";
 import { useSession, signIn, signOut, getSession } from "next-auth/react";
 import Router from "next/router";
-import { Layout, Button } from "antd";
+import { Layout, Button, Image } from "antd";
 import Header from "../src/commonComponents/header";
 import { PrismaClient } from "@prisma/client";
 
@@ -12,7 +12,6 @@ export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (session) {
     const name = session.user.name.split(" ");
-
     await prisma.user.upsert({
       where: {
         email: session.user.email,
@@ -47,8 +46,14 @@ const LoginPage: NextPage = () => {
   if (data) {
     return (
       <>
+        <Image
+          width={200}
+          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        />
         Signed in as {data.user.email} <br />
-        <Button onClick={() => signOut()}>Sign out</Button>
+        <Button block onClick={() => signOut()} style={{ padding: "10px" }}>
+          Sign out
+        </Button>
       </>
     );
   }
@@ -56,8 +61,22 @@ const LoginPage: NextPage = () => {
     <Layout>
       <Header isLogged={false} />
       <>
-        Not signed in <br />
-        <Button onClick={() => signIn()}>Sign in</Button>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100vh",
+          }}
+        >
+          <Image
+            width={200}
+            src="https://madrerusia.com/wp-content/uploads/2017/10/920x312-Contacts-1.jpg"
+          />
+          {/*  Not signed in */} <br />
+          <Button onClick={() => signIn()}>Sign in</Button>
+        </div>
       </>
     </Layout>
   );
