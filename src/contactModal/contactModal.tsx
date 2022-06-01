@@ -3,8 +3,9 @@ import { Button, Form, Input, Modal, ModalProps, Space } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { Contact } from "@prisma/client";
 
-import { CONTACTS_QUERY } from "../constants";
+import { CONTACTS_QUERY, ONE_HOUR_CACHE_TTL } from "../constants";
 import { createOrUpdateContact } from "../api/contact";
+import { saveCache } from "../utils/cache";
 
 interface ContactModalProps extends ModalProps {
   close: () => void;
@@ -50,9 +51,6 @@ const ContactModal = ({
       onError: (err) => {
         console.log(err);
       },
-      onSettled: () => {
-        queryClient.invalidateQueries([CONTACTS_QUERY]);
-      },
 
       onSuccess: (successData: { data: Omit<Contact, "userId" | "user"> }) => {
         let contactsToSave = contacts;
@@ -61,10 +59,9 @@ const ContactModal = ({
             (contact) => contact.id !== contactSelected.id
           );
         }
-        queryClient.setQueryData(
-          [CONTACTS_QUERY],
-          [...contactsToSave, { ...successData.data }]
-        );
+        const newData = [...contactsToSave, { ...successData.data }];
+        queryClient.setQueryData([CONTACTS_QUERY], newData);
+        saveCache(CONTACTS_QUERY, newData, ONE_HOUR_CACHE_TTL);
         modalProps.onSuccess();
       },
     }

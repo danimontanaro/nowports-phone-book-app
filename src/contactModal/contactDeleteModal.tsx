@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { Button, Modal } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { DeleteOutlined } from "@ant-design/icons";
-import { CONTACTS_QUERY } from "../../src/constants";
+import { CONTACTS_QUERY, ONE_HOUR_CACHE_TTL } from "../../src/constants";
 
 import { deleteContact } from "../../src/api/contact";
 import { Contact } from "@prisma/client";
+import { saveCache } from "../utils/cache";
 
 interface DeleteContactModalArgs {
   contacts: Omit<Contact, "userId" | "user">[];
@@ -18,11 +19,7 @@ const DeleteContactModal = ({
 }: DeleteContactModalArgs) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const queryClient = useQueryClient();
-  const {
-    isLoading,
-    error,
-    mutate: handleDeleteContact,
-  } = useMutation(
+  const { isLoading, mutate: handleDeleteContact } = useMutation(
     async (contact: Omit<Contact, "userId" | "user">) => {
       const response = await deleteContact(contact.id);
       const data = await response.json();
@@ -32,16 +29,14 @@ const DeleteContactModal = ({
       onError: (err) => {
         console.log(err);
       },
-      // Always refetch after error or success:
-      onSettled: () => {
-        queryClient.invalidateQueries([CONTACTS_QUERY]);
-      },
 
       onSuccess: () => {
         const newListContacts = contacts.filter(
           (contact) => contact.id !== contactSelected.id
         );
-        queryClient.setQueryData([CONTACTS_QUERY], [...newListContacts]);
+        const newData = [...newListContacts];
+        queryClient.setQueryData([CONTACTS_QUERY], newData);
+        saveCache(CONTACTS_QUERY, newData, ONE_HOUR_CACHE_TTL);
       },
     }
   );

@@ -44,7 +44,7 @@ export default async (
 
     const foundContacts = await prisma.contact.findMany({
       where: {
-        id: id || -1,
+        userId: id || -1,
       },
       select: {
         firstName: true,
@@ -63,7 +63,7 @@ export default async (
         id: contactId as number,
       },
     });
-    console.log({ deleteContact });
+
     res.status(200).json({ data: deleteContact });
     return;
   }
