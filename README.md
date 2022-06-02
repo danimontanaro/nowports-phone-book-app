@@ -7,10 +7,12 @@ This project can be tested in [this url](https://nowports-phone-book-app.vercel.
 ## Clone the project and install dependencies
 
 - Clone this repository:
-  `git clone git@github.com:danimontanaro/nowports-phone-book-app.git`
+
+`git clone git@github.com:danimontanaro/nowports-phone-book-app.git`
 
 - Install dependencies:
-  `yarn`
+
+`yarn`
 
 ## Create .env file
 
@@ -45,5 +47,7 @@ NEXTAUTH_URL=http://localhost:3000
 ## Start the project in localhost
 
 - Start the REST API server running
-  `yarn dev`
-  The server is now running on http://localhost:3000.
+
+`yarn dev`
+
+The server is now running on http://localhost:3000.
