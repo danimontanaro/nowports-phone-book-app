@@ -73,4 +73,3 @@ export default async (
   }
   return res.status(405);
 };
-id;
