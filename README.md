@@ -1,6 +1,10 @@
+# Test this project
+
+This project can be tested in [this url](https://nowports-phone-book-app.vercel.app/)
+
 # Getting started
 
-## To test it locally
+## Clone the project and install dependencies
 
 - Clone this repository:
   `git clone git@github.com:danimontanaro/nowports-phone-book-app.git`
@@ -8,7 +12,9 @@
 - Install dependencies:
   `yarn`
 
-- Create .env file with
+## Create .env file
+
+- Create .env file in the root of the project with the following variables:
 
 ```
 DB_URL=file:./dev.db
@@ -20,9 +26,14 @@ NEXTAUTH_SECRET=1234
 NEXTAUTH_URL=http://localhost:3000
 ```
 
-- For getting the variables GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET use
+- For `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` follow this instructions:
 
-`Go to your GitHub settings Select Applications > Developer applications tab. Pick an existing application or hit Register new application. Set a few parameters for your application and get the Client ID and Client Secret.`
+1. Go to your GitHub settings Select Applications > Developer applications tab.
+2. Pick an existing application or hit Register new application.
+3. Set a few parameters for your application and get the Client ID and Client Secret.
+4. After that, set the Client ID and Client secret in the env file.
+
+## Set up the database
 
 - Change provider variable in schema.prisma file
   `provider = "sqlite"`
@@ -31,8 +42,8 @@ NEXTAUTH_URL=http://localhost:3000
 
 `npx prisma migrate dev`
 
-When npx prisma migrate dev is executed against a newly created database, seeding is also triggered.
+## Start the project in localhost
 
-Start the REST API server
-Run `yarn dev`
-The server is now running on http://localhost:3000.
+- Start the REST API server running
+  `yarn dev`
+  The server is now running on http://localhost:3000.
