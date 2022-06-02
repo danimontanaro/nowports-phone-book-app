@@ -27,8 +27,8 @@ const contactsMock = [
     id: 10,
   },
   {
-    firstName: "David",
-    lastName: "Paley",
+    firstName: "Jose",
+    lastName: "Martinez",
     phone: 12321313,
     id: 18,
   },
@@ -39,8 +39,8 @@ const contactsMock = [
     id: 2,
   },
   {
-    firstName: "rubi",
-    lastName: "rubinsteins",
+    firstName: "Rubi",
+    lastName: "Perez",
     phone: 1234566,
     id: 1,
   },
