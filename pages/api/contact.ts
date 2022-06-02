@@ -13,7 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Contact>) => {
     const { id } = req.query;
     const contact = await prisma.contact.findUnique({
       where: {
-        id: id as string,
+        id: id,
       },
     });
     res.status(200).json(contact);
