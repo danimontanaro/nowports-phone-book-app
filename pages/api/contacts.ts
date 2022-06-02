@@ -54,7 +54,13 @@ export default async (
       },
     });
 
-    res.status(200).json({ data: foundContacts });
+    res
+      .status(200)
+      .json({
+        data: foundContacts.sort((a, b) =>
+          a.firstName.localeCompare(b.firstName)
+        ),
+      });
     return;
   } else if (req.method === "DELETE") {
     const contactId = JSON.parse(req.body);

@@ -60,7 +60,11 @@ const ContactModal = ({
           );
         }
         const newData = [...contactsToSave, { ...successData.data }];
-        queryClient.setQueryData([CONTACTS_QUERY], newData);
+        const sortedData = newData.sort((a, b) =>
+          a.firstName.localeCompare(b.firstName)
+        );
+
+        queryClient.setQueryData([CONTACTS_QUERY], sortedData);
         saveCache(CONTACTS_QUERY, newData, ONE_HOUR_CACHE_TTL);
         modalProps.onSuccess();
       },
