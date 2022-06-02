@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export default async (req: NextApiRequest, res: NextApiResponse<Contact>) => {
   const session = await getSession({ req });
   if (!session) {
-    return res.status(401);
+    return res.status(405);
   }
   if (req.method === "GET") {
     const { id } = req.query;
@@ -16,8 +16,8 @@ export default async (req: NextApiRequest, res: NextApiResponse<Contact>) => {
         id: parseInt(id as string),
       },
     });
-    res.status(200).json(contact);
+    res.status(202).json(contact);
     return;
   }
-  return res.status(405);
+  return res.status(404);
 };

@@ -21,9 +21,7 @@ const DeleteContactModal = ({
   const queryClient = useQueryClient();
   const { isLoading, mutate: handleDeleteContact } = useMutation(
     async (contact: Omit<Contact, "userId" | "user">) => {
-      const response = await deleteContact(contact.id);
-      const data = await response.json();
-      return data;
+      await deleteContact(contact.id);
     },
     {
       onError: (err) => {

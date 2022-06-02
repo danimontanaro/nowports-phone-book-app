@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Contact, PrismaClient } from "@prisma/client";
 import { getSession } from "next-auth/react";
+import { transpileModule } from "typescript";
 
 const prisma = new PrismaClient();
 
@@ -14,7 +15,7 @@ export default async (
 ) => {
   const session = await getSession({ req });
   if (!session) {
-    return res.status(401);
+    return res.status(405);
   }
   if (req.method === "POST") {
     const newContact = JSON.parse(req.body);
@@ -36,7 +37,7 @@ export default async (
         userId,
       },
     });
-    res.status(200).json({ data: saveContact });
+    res.status(202).json({ data: saveContact });
     return;
   } else if (req.method === "GET") {
     const { userId } = req.query;
@@ -51,6 +52,7 @@ export default async (
         lastName: true,
         phone: true,
         id: true,
+        addressLines: true,
       },
     });
 
@@ -62,14 +64,22 @@ export default async (
     return;
   } else if (req.method === "DELETE") {
     const contactId = JSON.parse(req.body);
-    const deleteContact = await prisma.contact.delete({
+    const contact = await prisma.contact.findUnique({
       where: {
-        id: contactId as number,
+        id: parseInt(contactId as string),
       },
     });
-
-    res.status(200).json({ data: deleteContact });
+    if (!contact) {
+      res.status(404);
+      return;
+    }
+    const deletedContact = await prisma.contact.delete({
+      where: {
+        id: contactId,
+      },
+    });
+    res.status(204).json({ data: deletedContact });
     return;
   }
-  return res.status(405);
+  return res.status(404);
 };

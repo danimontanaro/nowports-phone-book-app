@@ -1,17 +1,21 @@
+import React from "react";
 import { useState } from "react";
 
 import { Button, List, Divider, Space, Spin } from "antd";
-import { EditOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  PhoneOutlined,
+  PlusOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { Typography } from "antd";
 import { Contact } from "@prisma/client";
-
-import styles from "../../styles/Home.module.css";
-import React from "react";
 
 import ContactModal from "../../src/contactModal/contactModal";
 import DeleteContactModal from "../../src/contactModal/contactDeleteModal";
 
 import FetchFailure from "../../src/fetchFailure";
+import styles from "./index.module.css";
 
 interface HomePageArgs {
   contacts: Omit<Contact, "userId" | "user">[];
@@ -56,7 +60,6 @@ const HomePage = ({ contacts, isLoading, error, userId }: HomePageArgs) => {
             renderItem={(contact) => (
               <>
                 <List.Item
-                  className={styles.classListItem}
                   key={contact.id}
                   extra={
                     <Space direction="horizontal" size="large" align="center">
@@ -81,6 +84,27 @@ const HomePage = ({ contacts, isLoading, error, userId }: HomePageArgs) => {
                   }
                 >
                   <List.Item.Meta
+                    avatar={
+                      <UserOutlined
+                        style={{
+                          fontSize: "30px",
+                          color: "#08c",
+                          paddingRight: "30px",
+                        }}
+                      />
+                    }
+                    description={
+                      <>
+                        <PhoneOutlined
+                          style={{
+                            // fontSize: "30px",
+                            // color: "#08c",
+                            paddingRight: "10px",
+                          }}
+                        />
+                        {contact.phone}
+                      </>
+                    }
                     title={
                       <Typography.Link
                         //href={`/play/${contact.id}`}
@@ -88,13 +112,6 @@ const HomePage = ({ contacts, isLoading, error, userId }: HomePageArgs) => {
                           fontSize: "1.5rem",
                         }}
                       >
-                        <UserOutlined
-                          style={{
-                            fontSize: "30px",
-                            color: "#08c",
-                            paddingRight: "30px",
-                          }}
-                        />
                         {`${contact.firstName} ${contact.lastName}`}
                       </Typography.Link>
                     }

@@ -64,9 +64,9 @@ const ContactModal = ({
           a.firstName.localeCompare(b.firstName)
         );
 
+        modalProps.onSuccess();
         queryClient.setQueryData([CONTACTS_QUERY], sortedData);
         saveCache(CONTACTS_QUERY, newData, ONE_HOUR_CACHE_TTL);
-        modalProps.onSuccess();
       },
     }
   );
