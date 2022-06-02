@@ -20,13 +20,14 @@ NEXTAUTH_SECRET=1234
 NEXTAUTH_URL=http://localhost:3000
 ```
 
+- Change provider variable in schema.prisma file
+  `provider = "sqlite"`
+
 - Run the following command to create your database file.
 
-npx prisma migrate dev
-When npx prisma migrate dev is executed against a newly created database, seeding is also triggered. The seed file in prisma/seed.ts will be executed and your database will be populated with the sample data.
+`npx prisma migrate dev`
+When npx prisma migrate dev is executed against a newly created database, seeding is also triggered.
 
-3. Start the REST API server
-   yarn dev
-   The server is now running on http://localhost:3000.
-
-- Run `yarn dev`
+Start the REST API server
+Run `yarn dev`
+The server is now running on http://localhost:3000.

@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Contact>) => {
   }
   if (req.method === "GET") {
     const { id } = req.query;
-    const contact = await prisma.Contact.findUnique({
+    const contact = await prisma.contact.findUnique({
       where: {
         id: id as string,
       },
