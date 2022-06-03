@@ -1,3 +1,16 @@
+# About this project
+
+This is a contact aplication that was done with the following technologies:
+
+- Next js
+- Typescript
+- React Query
+- Jest and React testing library
+- Prisma
+- Postgres/SQL
+- CSS Modules
+- Vercel for deploy
+
 # Test this project
 
 This project can be tested in [this url](https://nowports-phone-book-app.vercel.app/)
